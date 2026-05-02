@@ -689,4 +689,4 @@ def clear():
 
 if __name__ == '__main__':
     # Starte den Flask-Server lokal
-    app.run(debug=True, host='0.0.0.0', port=5000)
+  app.run(debug=False, host='0.0.0.0', port=5000, use_reloader=False)
