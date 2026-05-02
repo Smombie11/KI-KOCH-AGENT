@@ -10,16 +10,10 @@ load_dotenv()
 app = Flask(__name__)
 
 # ========== GROQ API ==========
-# Versuche zuerst Streamlit Secrets (für Cloud-Deployment)
-# Falls nicht vorhanden, nutze Umgebungsvariablen (lokal)
-try:
-    import streamlit as st
-    GROQ_API_KEY = st.secrets.get("GROQ_API_KEY", os.getenv("GROQ_API_KEY"))
-except:
-    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 if not GROQ_API_KEY:
-    raise ValueError("❌ GROQ_API_KEY nicht gesetzt! Lokal: Bitte .env Datei aktualisieren. Cloud: Secrets hinzufügen.")
+    raise ValueError("❌ GROQ_API_KEY nicht gesetzt! Bitte .env Datei erstellen mit: GROQ_API_KEY=dein_key")
+
 client = Groq(api_key=GROQ_API_KEY)
 MODEL = "llama-3.3-70b-versatile"
 
@@ -694,4 +688,5 @@ def clear():
     return jsonify({'status': 'ok'})
 
 if __name__ == '__main__':
+    # Starte den Flask-Server lokal
     app.run(debug=True, host='0.0.0.0', port=5000)
