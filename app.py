@@ -78,6 +78,15 @@ HTML_TEMPLATE = f"""
     <meta charset="UTF-8">
     <title>KI-Koch-Assistent</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Import Map für Three.js und VRM -->
+    <script type="importmap">
+        {{
+            "imports": {{
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }}
+        }}
+    </script>
     <style>
         * {{ margin:0; padding:0; box-sizing:border-box; }}
         body {{ font-family: 'Segoe UI', 'Noto Sans Arabic', sans-serif; background: linear-gradient(135deg,#121212,#1e1e1e); color:#fff; padding:20px; }}
@@ -85,7 +94,21 @@ HTML_TEMPLATE = f"""
         .header {{ text-align:center; margin-bottom:30px; position:relative; }}
         .language-selector {{ position:absolute; top:0; right:0; background:#2d2d2d; padding:8px 12px; border-radius:30px; }}
         .language-selector select {{ background:#1e1e1e; color:white; border:1px solid #4CAF50; border-radius:20px; padding:5px 10px; cursor:pointer; }}
-        .avatar {{ width:100px; height:100px; border-radius:50%; background:#4CAF50; display:flex; align-items:center; justify-content:center; margin:0 auto 15px; font-size:50px; }}
+        /* 3D Avatar Container */
+        .avatar-3d {{
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 15px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 0 15px rgba(76,175,80,0.3);
+        }}
+        #avatarCanvas {{
+            width: 100%;
+            height: 100%;
+            display: block;
+        }}
         h1 {{ font-size:2rem; background:linear-gradient(135deg,#4CAF50,#2196F3); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }}
         .chat-container {{ background:#2d2d2d; border-radius:15px; height:400px; overflow-y:auto; padding:20px; margin-bottom:20px; }}
         .message {{ margin-bottom:15px; display:flex; }}
@@ -129,7 +152,10 @@ HTML_TEMPLATE = f"""
                 <option value="ar">العربية</option>
             </select>
         </div>
-        <div class="avatar">🧑‍🍳</div>
+        <!-- 3D Avatar Canvas ersetzt den alten Emoji -->
+        <div class="avatar-3d">
+            <canvas id="avatarCanvas"></canvas>
+        </div>
         <h1 id="mainTitle">KI-Koch-Assistent</h1>
         <p id="subtitle">🚀 Powered by Groq API</p>
     </div>
@@ -399,6 +425,8 @@ HTML_TEMPLATE = f"""
 
     updateUILanguage();
 </script>
+<!-- Three.js VRM Avatar Skript -->
+<script type="module" src="/static/avatar.js"></script>
 </body>
 </html>
 """
