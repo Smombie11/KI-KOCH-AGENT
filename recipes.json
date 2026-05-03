@@ -1,0 +1,8 @@
+[
+  {
+    "id": 1,
+    "title": "Mein Rezept",
+    "content": "<p>Hallo! Ich bin deine autonome KI-Koch-Assistenz auf Chef-Niveau. Ich helfe dir gerne bei deinen Kochanliegen. Wie kann ich dir heute helfen?</p>\n<p><strong>Mögliche Optionen:</strong></p>\n<ol>\n<li><strong>Rezepte erstellen</strong>: Ich kann dir ein Rezept basierend auf bestimmten Zutaten erstellen.</li>\n<li><strong>Zutaten ersetzen</strong>: Wenn du bestimmte Zutaten nicht hast, kann ich dir Alternativen vorschlagen.</li>\n<li><strong>Kochschritte erklären</strong>: Ich kann dir detaillierte Anleitungen für bestimmte Kochschritte geben.</li>\n<li><strong>Sicherheitshinweise</strong>: Ich kann dir wichtige Sicherheitshinweise für bestimmte Kochtechniken oder Zutaten geben.</li>\n</ol>\n<p>Was möchtest du gerne tun?</p>\n",
+    "date": "03.05.2026 13:44"
+  }
+]

@@ -36,8 +36,8 @@ def get_ai_response(user_input, language="de"):
 # Mehrsprachige UI-Texte
 TEXTS = {
     "de": {
-        "title": "KI-Koch-Assistent", "subtitle": "🚀 Powered by Groq API",
-        "welcome": "Hallo! Ich bin Chef Antonio. Was darf ich heute für dich kochen? 🍳",
+        "title": "KI-Koch-Assistent", "subtitle": "🚀 Powered by Gr API",
+        "welcome": "Hallo! Ich bin Chef Anatanai. Was darf ich heute für dich kochen? 🍳",
         "micBtn": "🎤 Hier klicken und sprechen", "statusReady": "⚡ Bereit zum Sprechen",
         "voiceLabel": "🎤 Erkannt:", "sendVoice": "📤 Diesen Text an KI senden",
         "textPlaceholder": "📝 Schreibe deine Frage hier...", "sendText": "📤 Senden",
@@ -47,8 +47,8 @@ TEXTS = {
         "errorComm": "Fehler bei der Kommunikation mit der KI"
     },
     "en": {
-        "title": "AI Cooking Assistant", "subtitle": "🚀 Powered by Groq API",
-        "welcome": "Hello! I'm Chef Antonio. What would you like me to cook for you today? 🍳",
+        "title": "AI Cooking Assistant", "subtitle": "🚀 Powered by Gr API",
+        "welcome": "Hello! I'm Chef Anatanai. What would you like me to cook for you today? 🍳",
         "micBtn": "🎤 Click and speak", "statusReady": "⚡ Ready to speak",
         "voiceLabel": "🎤 Recognized:", "sendVoice": "📤 Send this text to AI",
         "textPlaceholder": "📝 Type your question here...", "sendText": "📤 Send",
@@ -58,8 +58,8 @@ TEXTS = {
         "errorComm": "Error communicating with AI"
     },
     "ar": {
-        "title": "مساعد الطبخ الذكي", "subtitle": "🚀 مدعوم من Groq API",
-        "welcome": "مرحبًا! أنا الشيف أنطونيو. ماذا تحب أن أطبخ لك اليوم؟ 🍳",
+        "title": "مساعد الطبخ الذكي", "subtitle": "🚀 مدعوم من Gr API",
+        "welcome": "مرحبًا! أنا الشيف اناطاليا. ماذا تحب أن أطبخ لك اليوم؟ 🍳",
         "micBtn": "🎤 انقر وتحدث", "statusReady": "⚡ جاهز للتحدث",
         "voiceLabel": "🎤 تم التعرف على:", "sendVoice": "📤 إرسال هذا النص إلى الذكاء الاصطناعي",
         "textPlaceholder": "📝 اكتب سؤالك هنا...", "sendText": "📤 إرسال",
@@ -71,6 +71,14 @@ TEXTS = {
 }
 TEXTS_JSON = json.dumps(TEXTS, ensure_ascii=False)
 
+IMPORT_MAP = json.dumps({
+    "imports": {
+        "three": "https://unpkg.com/three@0.168.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.168.0/examples/jsm/",
+        "@pixiv/three-vrm": "https://unpkg.com/@pixiv/three-vrm@3.3.4/lib/three-vrm.module.js"
+    }
+})
+
 HTML_TEMPLATE = f"""
 <!DOCTYPE html>
 <html>
@@ -78,15 +86,12 @@ HTML_TEMPLATE = f"""
     <meta charset="UTF-8">
     <title>KI-Koch-Assistent</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- Import Map für Three.js und VRM -->
+    
+    <!-- Import Map für Three.js + Addons + VRM -->
     <script type="importmap">
-        {{
-            "imports": {{
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
-            }}
-        }}
+    {IMPORT_MAP}
     </script>
+
     <style>
         * {{ margin:0; padding:0; box-sizing:border-box; }}
         body {{ font-family: 'Segoe UI', 'Noto Sans Arabic', sans-serif; background: linear-gradient(135deg,#121212,#1e1e1e); color:#fff; padding:20px; }}
@@ -94,20 +99,22 @@ HTML_TEMPLATE = f"""
         .header {{ text-align:center; margin-bottom:30px; position:relative; }}
         .language-selector {{ position:absolute; top:0; right:0; background:#2d2d2d; padding:8px 12px; border-radius:30px; }}
         .language-selector select {{ background:#1e1e1e; color:white; border:1px solid #4CAF50; border-radius:20px; padding:5px 10px; cursor:pointer; }}
-        /* 3D Avatar Container */
         .avatar-3d {{
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 15px;
-            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            height: 600px;
+            margin: 0 auto 20px;
+            border-radius: 25px;
             overflow: hidden;
-            background: #1e1e1e;
-            box-shadow: 0 0 15px rgba(76,175,80,0.3);
+            background: linear-gradient(135deg, #0a0a0a 0%, #1e1e1e 100%);
+            box-shadow: 0 0 30px rgba(76,175,80,0.5), inset 0 0 20px rgba(0,0,0,0.5);
+            border: 2px solid #4CAF50;
         }}
         #avatarCanvas {{
             width: 100%;
             height: 100%;
             display: block;
+            image-rendering: crisp-edges;
         }}
         h1 {{ font-size:2rem; background:linear-gradient(135deg,#4CAF50,#2196F3); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }}
         .chat-container {{ background:#2d2d2d; border-radius:15px; height:400px; overflow-y:auto; padding:20px; margin-bottom:20px; }}
@@ -152,7 +159,6 @@ HTML_TEMPLATE = f"""
                 <option value="ar">العربية</option>
             </select>
         </div>
-        <!-- 3D Avatar Canvas ersetzt den alten Emoji -->
         <div class="avatar-3d">
             <canvas id="avatarCanvas"></canvas>
         </div>
@@ -178,13 +184,14 @@ HTML_TEMPLATE = f"""
             <button class="clear-btn" id="clearBtn">🗑️ Chat löschen</button>
         </div>
         <div class="speech-controls" id="speechControls" style="display:none;">
-            <button class="speech-btn pause-btn" id="pauseBtn" onclick="pauseSpeech()">⏸️ Pause</button>
-            <button class="speech-btn resume-btn" id="resumeBtn" onclick="resumeSpeech()">▶️ Fortsetzen</button>
-            <button class="speech-btn stop-btn" id="stopBtn" onclick="stopSpeech()">⏹️ Stop</button>
+            <button class="speech-btn pause-btn" onclick="pauseSpeech()">⏸️ Pause</button>
+            <button class="speech-btn resume-btn" onclick="resumeSpeech()">▶️ Fortsetzen</button>
+            <button class="speech-btn stop-btn" onclick="stopSpeech()">⏹️ Stop</button>
         </div>
     </div>
     <div class="footer" id="footer">🎤 1. Mikrofon klicken → 2. Sprechen → 3. Pausieren → 4. Auf "Senden" klicken</div>
 </div>
+
 <script>
     const texts = {TEXTS_JSON};
     let currentLang = "de";
@@ -294,10 +301,14 @@ HTML_TEMPLATE = f"""
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = langMap[currentLang];
         utterance.rate = 0.85;
+        utterance.onstart = () => {{
+            if (window.startAvatarVideo) window.startAvatarVideo();
+        }};
         utterance.onend = () => {{
             isSpeaking = false;
             isPaused = false;
             currentUtterance = null;
+            if (window.stopAvatarVideo) window.stopAvatarVideo();
             updateSpeechButtons();
         }};
         currentUtterance = utterance;
@@ -309,6 +320,7 @@ HTML_TEMPLATE = f"""
         if (window.speechSynthesis && window.speechSynthesis.speaking && !isPaused) {{
             window.speechSynthesis.pause();
             isPaused = true;
+            if (window.pauseAvatarVideo) window.pauseAvatarVideo();
             updateSpeechButtons();
         }}
     }};
@@ -317,6 +329,7 @@ HTML_TEMPLATE = f"""
         if (window.speechSynthesis && isPaused) {{
             window.speechSynthesis.resume();
             isPaused = false;
+            if (window.resumeAvatarVideo) window.resumeAvatarVideo();
             updateSpeechButtons();
         }}
     }};
@@ -327,6 +340,7 @@ HTML_TEMPLATE = f"""
             isSpeaking = false;
             isPaused = false;
             currentUtterance = null;
+            if (window.stopAvatarVideo) window.stopAvatarVideo();
             updateSpeechButtons();
         }}
     }};
@@ -335,18 +349,20 @@ HTML_TEMPLATE = f"""
         const pauseBtn = document.getElementById('pauseBtn');
         const resumeBtn = document.getElementById('resumeBtn');
         const stopBtn = document.getElementById('stopBtn');
-        if (isSpeaking && !isPaused) {{
-            pauseBtn.style.display = 'inline-block';
-            resumeBtn.style.display = 'none';
-            stopBtn.style.display = 'inline-block';
-        }} else if (isPaused) {{
-            pauseBtn.style.display = 'none';
-            resumeBtn.style.display = 'inline-block';
-            stopBtn.style.display = 'inline-block';
-        }} else {{
-            pauseBtn.style.display = 'none';
-            resumeBtn.style.display = 'none';
-            stopBtn.style.display = 'none';
+        if (pauseBtn && resumeBtn && stopBtn) {{
+            if (isSpeaking && !isPaused) {{
+                pauseBtn.style.display = 'inline-block';
+                resumeBtn.style.display = 'none';
+                stopBtn.style.display = 'inline-block';
+            }} else if (isPaused) {{
+                pauseBtn.style.display = 'none';
+                resumeBtn.style.display = 'inline-block';
+                stopBtn.style.display = 'inline-block';
+            }} else {{
+                pauseBtn.style.display = 'none';
+                resumeBtn.style.display = 'none';
+                stopBtn.style.display = 'none';
+            }}
         }}
     }}
 
@@ -425,7 +441,8 @@ HTML_TEMPLATE = f"""
 
     updateUILanguage();
 </script>
-<!-- Three.js VRM Avatar Skript -->
+
+<!-- Lade avatar.js für Video-Avatar -->
 <script type="module" src="/static/avatar.js"></script>
 </body>
 </html>
